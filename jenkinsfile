@@ -1,7 +1,7 @@
 pipeline{
     agent any
     stages{
-        stage('BUILD'{
+        stage('BUILD'){
             steps{
                 sh 'printenv'
                  
@@ -11,9 +11,11 @@ pipeline{
         steps {
         withenv (["AWS_ACCESS_KEY_ID=${env.AWS_ACCESS_KEY_ID}", "AWS_SECRET_ACCESS_KEY=${env.AWS_SECRET_ACCESS_KEY}", "AWS_DEFAULT_REGION=${env.AWS_DEFAULT_REGION}"]){
         sh 'docker login -u AWS -p $(aws ecr-public get-login-password --region us-east-1 )  public.ecr.aws/t6d9l0c9'
-        sh 'docker tag  workshop62 :"$BUILD_ID""'
-        sh 'docker push  public.ecr.aws/t6d9l0c9/workshop62:latest:""$BUILD_ID""'
+       sh 'docker build -t workshop62 .'
+       sh 'docker tag workshop62:latest public.ecr.aws/t6d9l0c9/workshop62:""$BUILD_ID""'
+        sh 'docker push  public.ecr.aws/t6d9l0c9/workshop62:""$BUILD_ID""'  
    }
 }
 }
-})
+}
+}
